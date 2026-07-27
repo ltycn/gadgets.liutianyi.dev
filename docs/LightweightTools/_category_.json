@@ -1,0 +1,10 @@
+{
+  "label": "小工具",
+  "position": 2,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "title": "小工具",
+    "description": "面向日常开发与验证工作的小型工具，涵盖驱动元数据读取、显示管线 underrun 监控、发布标签命令行、应用启动耗时测量等。"
+  }
+}

@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 500" width="960" height="500" role="img" aria-label="UnderRun 轮询与告警流程">
+  <style>
+    /* The figure carries its own background so it stays legible no matter which theme the
+       page is in — an SVG loaded through an img element cannot see the page CSS variables. */
+    :root{
+      --bg:#f7f8fa; --fg:#4b5563; --fg2:#6b7280; --strong:#111827; --line:#9ca3af;
+      --panel:rgba(15,23,42,0.045); --panel2:rgba(15,23,42,0.02);
+      --blue:#2563eb; --green:#059669; --amber:#d97706; --purple:#9333ea; --rose:#e11d48;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{ --bg:#1b1f24; --fg:#c3ccd8; --fg2:#98a3b3; --strong:#f1f5f9; --line:#6b7686;
+             --panel:rgba(255,255,255,0.06); --panel2:rgba(255,255,255,0.03);
+             --blue:#60a5fa; --green:#34d399; --amber:#fbbf24; --purple:#c084fc; --rose:#fb7185; }
+    }
+    .bg{ fill:var(--bg); }
+    text{ font-family:"Segoe UI",-apple-system,system-ui,"Microsoft YaHei",sans-serif; fill:var(--fg); }
+    .t-title{ font-size:15px; font-weight:700; fill:var(--strong); }
+    .t-h{ font-size:12.5px; font-weight:600; fill:var(--strong); }
+    .t-b{ font-size:11.5px; }
+    .t-m{ font-size:11px; font-family:"Cascadia Code",Consolas,"SF Mono",monospace; fill:var(--fg2); }
+    .t-tag{ font-size:10.5px; font-weight:700; letter-spacing:.06em; }
+    .t-edge{ font-size:11px; fill:var(--fg2); }
+    .card{ fill:var(--panel); stroke:var(--line); stroke-width:1.1; }
+    .card2{ fill:var(--panel2); stroke:var(--line); stroke-width:1; stroke-dasharray:4 3; }
+    .arrow{ stroke:var(--line); stroke-width:1.6; fill:none; marker-end:url(#ah2); }
+    .arrow-d{ stroke:var(--line); stroke-width:1.3; fill:none; stroke-dasharray:5 4; marker-end:url(#ah2); }
+  </style>
+  <defs>
+    <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--line)"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="960" height="500"/>
+
+  <text class="t-title" x="20" y="26">轮询与告警流程</text>
+
+  <!-- ticker -->
+  <rect class="card" x="20" y="52" width="150" height="86" rx="9"/>
+  <rect x="20" y="52" width="4" height="86" rx="2" fill="var(--blue)"/>
+  <text class="t-tag" x="36" y="72" fill="var(--blue)">TICKER</text>
+  <text class="t-h" x="36" y="92">轮询周期 1 秒</text>
+  <text class="t-m" x="36" y="112">time.NewTicker</text>
+  <text class="t-b" x="36" y="130">panic 被捕获</text>
+
+  <!-- index -->
+  <rect class="card" x="210" y="52" width="190" height="86" rx="9"/>
+  <rect x="210" y="52" width="4" height="86" rx="2" fill="var(--amber)"/>
+  <text class="t-tag" x="226" y="72" fill="var(--amber)">定位</text>
+  <text class="t-h" x="226" y="92">确定设备实例索引</text>
+  <text class="t-b" x="226" y="112">首次在 0000~0009 间逐个</text>
+  <text class="t-b" x="226" y="130">探测，命中后缓存该索引</text>
+
+  <!-- read -->
+  <rect class="card" x="440" y="52" width="200" height="86" rx="9"/>
+  <rect x="440" y="52" width="4" height="86" rx="2" fill="var(--green)"/>
+  <text class="t-tag" x="456" y="72" fill="var(--green)">读取</text>
+  <text class="t-h" x="456" y="92">四个 Pipe 的计数</text>
+  <text class="t-m" x="456" y="112">UnderRunCountPipeA~D</text>
+  <text class="t-b" x="456" y="130">优先整型，失败回退二进制</text>
+
+  <!-- emit update -->
+  <rect class="card" x="680" y="52" width="260" height="86" rx="9"/>
+  <rect x="680" y="52" width="4" height="86" rx="2" fill="var(--purple)"/>
+  <text class="t-tag" x="696" y="72" fill="var(--purple)">推送</text>
+  <text class="t-h" x="696" y="92">每次轮询发送 update</text>
+  <text class="t-m" x="696" y="112">underrun:update → 前端</text>
+  <text class="t-b" x="696" y="130">读取失败标记 valid=false，不告警</text>
+
+  <path class="arrow" d="M172,95 L206,95"/>
+  <path class="arrow" d="M402,95 L436,95"/>
+  <path class="arrow" d="M642,95 L676,95"/>
+
+  <!-- 基线判断 -->
+  <rect class="card2" x="20" y="176" width="420" height="92" rx="9"/>
+  <text class="t-h" x="38" y="198">首次采样仅作为基线</text>
+  <text class="t-b" x="38" y="220">initialized 为 false 时，本次快照存入 last 后直接返回。</text>
+  <text class="t-b" x="38" y="240">Stop() 会重置该标志，每次重新开始监控都重新取基线。</text>
+  <text class="t-m" x="38" y="260">因此双击卡片清零后不会立即产生告警</text>
+
+  <!-- 比较 -->
+  <rect class="card" x="480" y="176" width="460" height="92" rx="9"/>
+  <rect x="480" y="176" width="4" height="92" rx="2" fill="var(--rose)"/>
+  <text class="t-h" x="498" y="198">逐条比对 last 与 curr</text>
+  <text class="t-b" x="498" y="220">A/B/C/D 任一不相等，即生成一条 URDiff（prev → curr）</text>
+  <text class="t-m" x="498" y="240">判定条件为「不相等」而非「增大」，回落同样计为一次变化</text>
+  <text class="t-b" x="498" y="260">汇总后发送 underrun:change</text>
+
+  <path class="arrow-d" d="M810,144 L810,172"/>
+  <path class="arrow-d" d="M230,144 L230,172"/>
+
+  <!-- 告警三件事 -->
+  <rect class="card" x="20" y="306" width="920" height="118" rx="9"/>
+  <rect x="20" y="306" width="4" height="118" rx="2" fill="var(--rose)"/>
+  <text class="t-h" x="38" y="330">change 事件触发的三项动作</text>
+
+  <text class="t-tag" x="38" y="356" fill="var(--rose)">GO 侧</text>
+  <text class="t-b" x="38" y="376">WindowUnminimise + WindowShow</text>
+  <text class="t-b" x="38" y="394">托盘状态下同样恢复窗口</text>
+
+  <text class="t-tag" x="350" y="356" fill="var(--rose)">弹窗</text>
+  <text class="t-b" x="350" y="376">UnderRun Occured 模态框</text>
+  <text class="t-b" x="350" y="394">列出每条 Pipe 的 prev → curr</text>
+
+  <text class="t-tag" x="650" y="356" fill="var(--rose)">铃声</text>
+  <text class="t-b" x="650" y="376">alert.wav 循环播放</text>
+  <text class="t-b" x="650" y="394">关闭模态框后停止</text>
+
+  <path class="arrow" d="M710,272 L710,302"/>
+
+  <text class="t-m" x="38" y="414">右侧 Changes 面板保留最近 80 条记录，含时间戳与差值</text>
+
+  <text class="t-edge" x="20" y="452">监控不需要管理员权限，仅清零操作触发提权流程。</text>
+  <text class="t-edge" x="20" y="472">单实例运行：重复启动时将已有窗口置前，新进程随即退出。</text>
+</svg>

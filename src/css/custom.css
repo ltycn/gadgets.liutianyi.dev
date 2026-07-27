@@ -1,0 +1,97 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #2e8555;
+  --ifm-color-primary-dark: #29784c;
+  --ifm-color-primary-darker: #277148;
+  --ifm-color-primary-darkest: #205d3b;
+  --ifm-color-primary-light: #33925d;
+  --ifm-color-primary-lighter: #359962;
+  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #25c2a0;
+  --ifm-color-primary-dark: #21af90;
+  --ifm-color-primary-darker: #1fa588;
+  --ifm-color-primary-darkest: #1a8870;
+  --ifm-color-primary-light: #29d5b0;
+  --ifm-color-primary-lighter: #32d8b4;
+  --ifm-color-primary-lightest: #4fddbf;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* ---------------------------------------------------------------------------
+   Screenshots and figures
+   Most pages here are screenshot-heavy. Frame them so a dark app window does
+   not bleed into a light page (and vice versa), and cap their height so a tall
+   capture does not push the surrounding prose off screen.
+   --------------------------------------------------------------------------- */
+.markdown img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.4rem auto;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 6px 18px rgba(0, 0, 0, 0.06);
+  background: var(--ifm-background-surface-color);
+}
+
+[data-theme='dark'] .markdown img {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+/* Note: SVG diagrams get the same frame as screenshots. They are small enough that
+   Docusaurus inlines them as data: URIs, so a src$='.svg' selector would not match
+   them anyway — and a framed diagram sits fine next to a framed screenshot. */
+
+/* ---------------------------------------------------------------------------
+   Tables
+   Parameter tables are wide. Let them scroll inside the content column instead
+   of stretching the page.
+   --------------------------------------------------------------------------- */
+.markdown table {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.markdown table th,
+.markdown table td {
+  white-space: normal;
+}
+
+/* Inline code inside tables and prose reads better slightly toned down. */
+.markdown code {
+  border-radius: 5px;
+  padding: 0.1rem 0.35rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Prose rhythm
+   --------------------------------------------------------------------------- */
+.markdown h2 {
+  margin-top: 2.4rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.markdown h2:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.markdown blockquote,
+.markdown .theme-admonition {
+  margin: 1.2rem 0;
+}

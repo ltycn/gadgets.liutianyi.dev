@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" width="960" height="430" role="img" aria-label="UnderRun 计数所在的注册表位置与读写方式">
+  <style>
+    /* The figure carries its own background so it stays legible no matter which theme the
+       page is in — an SVG loaded through an img element cannot see the page CSS variables. */
+    :root{
+      --bg:#f7f8fa; --fg:#4b5563; --fg2:#6b7280; --strong:#111827; --line:#9ca3af;
+      --panel:rgba(15,23,42,0.045); --panel2:rgba(15,23,42,0.02);
+      --blue:#2563eb; --green:#059669; --amber:#d97706; --purple:#9333ea; --rose:#e11d48;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{ --bg:#1b1f24; --fg:#c3ccd8; --fg2:#98a3b3; --strong:#f1f5f9; --line:#6b7686;
+             --panel:rgba(255,255,255,0.06); --panel2:rgba(255,255,255,0.03);
+             --blue:#60a5fa; --green:#34d399; --amber:#fbbf24; --purple:#c084fc; --rose:#fb7185; }
+    }
+    .bg{ fill:var(--bg); }
+    text{ font-family:"Segoe UI",-apple-system,system-ui,"Microsoft YaHei",sans-serif; fill:var(--fg); }
+    .t-title{ font-size:15px; font-weight:700; fill:var(--strong); }
+    .t-h{ font-size:12.5px; font-weight:600; fill:var(--strong); }
+    .t-b{ font-size:11.5px; }
+    .t-m{ font-size:11.5px; font-family:"Cascadia Code",Consolas,"SF Mono",monospace; }
+    .t-m2{ font-size:11px; font-family:"Cascadia Code",Consolas,"SF Mono",monospace; fill:var(--fg2); }
+    .t-tag{ font-size:10.5px; font-weight:700; letter-spacing:.06em; }
+    .card{ fill:var(--panel); stroke:var(--line); stroke-width:1.1; }
+    .card2{ fill:var(--panel2); stroke:var(--line); stroke-width:1; stroke-dasharray:4 3; }
+    .chip{ fill:var(--panel); stroke:var(--line); stroke-width:1; }
+    .arrow{ stroke:var(--line); stroke-width:1.5; fill:none; marker-end:url(#ah3); }
+  </style>
+  <defs>
+    <marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--line)"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="960" height="430"/>
+
+  <text class="t-title" x="20" y="26">计数所在的注册表位置</text>
+
+  <!-- key path -->
+  <rect class="card" x="20" y="46" width="920" height="92" rx="9"/>
+  <rect x="20" y="46" width="4" height="92" rx="2" fill="var(--blue)"/>
+  <text class="t-tag" x="38" y="68" fill="var(--blue)">键路径</text>
+  <text class="t-m" x="38" y="90">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\</text>
+  <text class="t-m" x="38" y="110">{4d36e968-e325-11ce-bfc1-08002be10318}\<tspan fill="var(--amber)">00NN</tspan></text>
+  <text class="t-b" x="38" y="130">该 GUID 为 Windows Display 设备类，00NN 为同类设备下的实例号</text>
+
+  <!-- 实例枚举 -->
+  <rect class="card" x="20" y="164" width="440" height="140" rx="9"/>
+  <rect x="20" y="164" width="4" height="140" rx="2" fill="var(--amber)"/>
+  <text class="t-tag" x="38" y="186" fill="var(--amber)">实例探测</text>
+  <text class="t-b" x="38" y="208">依次探测 0000 至 0009，以是否存在下列四个值为判定条件。</text>
+  <text class="t-b" x="38" y="228">命中后缓存索引，后续每次轮询仅打开该键。</text>
+
+  <g>
+    <rect class="chip" x="38" y="242" width="52" height="24" rx="5" stroke="var(--green)" stroke-width="1.8"/>
+    <text class="t-m2" x="50" y="258" fill="var(--green)">0000</text>
+    <rect class="chip" x="98" y="242" width="52" height="24" rx="5"/>
+    <text class="t-m2" x="110" y="258">0001</text>
+    <rect class="chip" x="158" y="242" width="52" height="24" rx="5"/>
+    <text class="t-m2" x="170" y="258">0002</text>
+    <rect class="chip" x="218" y="242" width="52" height="24" rx="5"/>
+    <text class="t-m2" x="230" y="258">0003</text>
+    <text class="t-m2" x="280" y="258">···</text>
+    <rect class="chip" x="310" y="242" width="52" height="24" rx="5"/>
+    <text class="t-m2" x="322" y="258">0009</text>
+  </g>
+  <text class="t-b" x="38" y="288" fill="var(--green)">↑ 命中的实例即上报 underrun 的设备</text>
+
+  <!-- 四个值 -->
+  <rect class="card" x="500" y="164" width="440" height="140" rx="9"/>
+  <rect x="500" y="164" width="4" height="140" rx="2" fill="var(--green)"/>
+  <text class="t-tag" x="518" y="186" fill="var(--green)">四个值名</text>
+  <text class="t-m" x="518" y="210">UnderRunCountPipeA</text>
+  <text class="t-m" x="518" y="230">UnderRunCountPipeB</text>
+  <text class="t-m" x="518" y="250">UnderRunCountPipeC</text>
+  <text class="t-m" x="518" y="270">UnderRunCountPipeD</text>
+  <text class="t-b" x="518" y="292">对应界面上的 A / B / C / D 四张卡片</text>
+
+  <!-- 读法与写法 -->
+  <rect class="card2" x="20" y="326" width="440" height="86" rx="9"/>
+  <text class="t-h" x="38" y="348">读取兼容两种值类型</text>
+  <text class="t-b" x="38" y="370">优先按整型读取；失败则按二进制读取前 4 字节，</text>
+  <text class="t-b" x="38" y="390">反转字节序后解析为 int32</text>
+
+  <rect class="card2" x="500" y="326" width="440" height="86" rx="9"/>
+  <text class="t-h" x="518" y="348">清零统一写入 REG_BINARY</text>
+  <text class="t-b" x="518" y="370">四字节全 0。直接写入失败时通过 PowerShell 提权</text>
+  <text class="t-b" x="518" y="390">调用 reg.exe，触发一次 UAC 并同步等待其结束</text>
+
+  <path class="arrow" d="M240,308 L240,322"/>
+  <path class="arrow" d="M720,308 L720,322"/>
+  <path class="arrow" d="M460,234 L496,234"/>
+</svg>

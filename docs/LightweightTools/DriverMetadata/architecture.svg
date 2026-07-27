@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" width="960" height="470" role="img" aria-label="DriverMetadata 数据流：WMI 枚举、定位 .cat、解析 CTL、界面呈现">
+  <style>
+    /* The figure carries its own background so it stays legible no matter which theme the
+       page is in — an SVG loaded through an img element cannot see the page CSS variables. */
+    :root{
+      --bg:#f7f8fa; --fg:#4b5563; --fg2:#6b7280; --strong:#111827; --line:#9ca3af;
+      --panel:rgba(15,23,42,0.045); --panel2:rgba(15,23,42,0.02);
+      --blue:#2563eb; --green:#059669; --amber:#d97706; --purple:#9333ea; --rose:#e11d48;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{ --bg:#1b1f24; --fg:#c3ccd8; --fg2:#98a3b3; --strong:#f1f5f9; --line:#6b7686;
+             --panel:rgba(255,255,255,0.06); --panel2:rgba(255,255,255,0.03);
+             --blue:#60a5fa; --green:#34d399; --amber:#fbbf24; --purple:#c084fc; --rose:#fb7185; }
+    }
+    .bg{ fill:var(--bg); }
+    text{ font-family:"Segoe UI",-apple-system,system-ui,"Microsoft YaHei",sans-serif; fill:var(--fg); }
+    .t-title{ font-size:15px; font-weight:700; fill:var(--strong); }
+    .t-step{ font-size:11px; font-weight:700; letter-spacing:.08em; }
+    .t-h{ font-size:13px; font-weight:600; fill:var(--strong); }
+    .t-b{ font-size:11.5px; }
+    .t-m{ font-size:11px; font-family:"Cascadia Code",Consolas,"SF Mono",monospace; fill:var(--fg2); }
+    .t-note{ font-size:11px; fill:var(--fg2); }
+    .card{ fill:var(--panel); stroke:var(--line); stroke-width:1.1; }
+    .card2{ fill:var(--panel2); stroke:var(--line); stroke-width:1; stroke-dasharray:4 3; }
+    .arrow{ stroke:var(--line); stroke-width:1.6; fill:none; marker-end:url(#ah); }
+    .arrow-d{ stroke:var(--line); stroke-width:1.3; fill:none; stroke-dasharray:5 4; marker-end:url(#ah); }
+  </style>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--line)"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="960" height="470"/>
+
+  <text class="t-title" x="20" y="26">DriverMetadata 扫描流程</text>
+
+  <!-- ① WMI -->
+  <rect class="card" x="20" y="52" width="210" height="132" rx="9"/>
+  <rect x="20" y="52" width="4" height="132" rx="2" fill="var(--blue)"/>
+  <text class="t-step" x="38" y="74" fill="var(--blue)">① 枚举</text>
+  <text class="t-h" x="38" y="94">通过 WMI 获取驱动清单</text>
+  <text class="t-m" x="38" y="115">Win32_PnPSignedDriver</text>
+  <text class="t-b" x="38" y="133">字段：设备名、版本、厂商、</text>
+  <text class="t-b" x="38" y="149">INF 名、DeviceID、HWID</text>
+  <text class="t-m" x="38" y="170">Win32_PnPEntity → HWID 全集</text>
+
+  <!-- ② 定位 cat -->
+  <rect class="card" x="270" y="52" width="200" height="132" rx="9"/>
+  <rect x="270" y="52" width="4" height="132" rx="2" fill="var(--amber)"/>
+  <text class="t-step" x="288" y="74" fill="var(--amber)">② 定位</text>
+  <text class="t-h" x="288" y="94">由 INF 名推导 .cat</text>
+  <text class="t-m" x="288" y="115">matcher.FindCatPath()</text>
+  <text class="t-b" x="288" y="135">替换扩展名后在 CatRoot</text>
+  <text class="t-b" x="288" y="151">目录中检查文件是否存在</text>
+  <text class="t-note" x="288" y="171">不存在时该字段留空</text>
+
+  <!-- ③ 解析 -->
+  <rect class="card" x="510" y="52" width="210" height="132" rx="9"/>
+  <rect x="510" y="52" width="4" height="132" rx="2" fill="var(--green)"/>
+  <text class="t-step" x="528" y="74" fill="var(--green)">③ 解析</text>
+  <text class="t-h" x="528" y="94">读取 CTL 扩展项</text>
+  <text class="t-m" x="528" y="115">crypt32!CryptQueryObject</text>
+  <text class="t-b" x="528" y="135">遍历 CTL_INFO 扩展项，</text>
+  <text class="t-b" x="528" y="151">筛选下列 OID：</text>
+  <text class="t-m" x="528" y="171">1.3.6.1.4.1.311.12.2.1</text>
+
+  <!-- ④ 前端 -->
+  <rect class="card" x="760" y="52" width="180" height="132" rx="9"/>
+  <rect x="760" y="52" width="4" height="132" rx="2" fill="var(--purple)"/>
+  <text class="t-step" x="778" y="74" fill="var(--purple)">④ 呈现</text>
+  <text class="t-h" x="778" y="94">列表与详情</text>
+  <text class="t-b" x="778" y="115">DriverList 排序筛选</text>
+  <text class="t-b" x="778" y="133">MetadataView 展开</text>
+  <text class="t-b" x="778" y="151">命中的 HWID 高亮</text>
+  <text class="t-note" x="778" y="171">Copy All 走 Go 侧剪贴板</text>
+
+  <path class="arrow" d="M232,118 L266,118"/>
+  <path class="arrow" d="M472,118 L506,118"/>
+  <path class="arrow" d="M722,118 L756,118"/>
+
+  <!-- 下半：ASN.1 拆解 -->
+  <rect class="card2" x="510" y="212" width="430" height="106" rx="9"/>
+  <text class="t-h" x="528" y="234">扩展项中的 ASN.1 结构</text>
+  <text class="t-m" x="528" y="256">SEQUENCE ┬ 0x1E BMPString  → 键名（大端 UTF-16）</text>
+  <text class="t-m" x="528" y="274">         ├ 0x02 INTEGER    → 跳过</text>
+  <text class="t-m" x="528" y="292">         └ 0x04 OCTET STR  → 值（小端 UTF-16）</text>
+  <text class="t-note" x="528" y="310">键名以 HWID 开头的条目被过滤，避免与硬件 ID 列表重复</text>
+  <path class="arrow-d" d="M615,190 L615,208"/>
+
+  <!-- 左下：HWID 匹配 -->
+  <rect class="card2" x="20" y="212" width="450" height="106" rx="9"/>
+  <text class="t-h" x="38" y="234">匹配 HWID 的判定顺序</text>
+  <text class="t-m" x="38" y="256">PickRawMatchedHardwareId</text>
+  <text class="t-b" x="200" y="256">精确 → 前缀 → 反向最长前缀</text>
+  <text class="t-m" x="38" y="276">PickDisplayMatchedHardwareId</text>
+  <text class="t-b" x="248" y="276">ACPI\VEN_x&amp;DEV_y → ACPI\xy</text>
+  <text class="t-note" x="38" y="298">两个结果同时保留：Raw 用于比对，Display 用于界面标记 (Match)</text>
+  <path class="arrow-d" d="M120,190 L120,208"/>
+  <path class="arrow-d" d="M470,265 L760,265 L760,190" marker-end="url(#ah)"/>
+
+  <!-- 脚注 -->
+  <rect class="card2" x="20" y="348" width="920" height="98" rx="9"/>
+  <text class="t-h" x="38" y="372">三种入口共用同一解析链</text>
+  <text class="t-b" x="38" y="394">Scan System Drivers — 执行全部四个阶段，启动时自动执行一次</text>
+  <text class="t-b" x="38" y="414">Scan Folder — 递归遍历目录下所有 .cat，跳过 ①②，直接进入 ③</text>
+  <text class="t-b" x="38" y="434">Scan File — 仅解析单个 .cat，设备名取文件名</text>
+</svg>
